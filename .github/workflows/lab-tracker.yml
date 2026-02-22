@@ -4,13 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       filename:
-        description: 'Name of the file (must end in .txt)'
+        description: 'Name of the file (extension .txt added automatically)'
         required: true
-        default: 'lab_report.txt'
-      lab_name:
-        description: 'Specify the Lab Name'
-        required: true
-
+        type: string
+        default: 'lab-results'
       # Slot 1
       name1:
         description: 'Chapter 1 Name'
@@ -87,29 +84,31 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  create-and-commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Process Entries
+      - name: Generate File Content
         run: |
-          FILENAME="${{ github.event.inputs.filename }}"
+          # Automatically append .txt to the input filename
+          RAW_NAME="${{ github.event.inputs.filename }}"
+          FULL_FILENAME="${RAW_NAME}.txt"
           
-          # Initialize or clear file
-          > "$FILENAME"
+          # Initialize or clear the file
+          > "$FULL_FILENAME"
 
-          # Function to check and write
+          # Function to check and write entries
           write_entry() {
-            local name="$1"
-            local type="$2"
-            if [ "$type" != "None" ] && [ -n "$name" ]; then
-              echo "$name,$type" >> "$FILENAME"
+            local entry_name="$1"
+            local entry_type="$2"
+            if [ "$entry_type" != "None" ] && [ -n "$entry_name" ]; then
+              echo "$entry_name,$entry_type" >> "$FULL_FILENAME"
             fi
           }
 
-          # Call function for all 10 slots
+          # Process all 10 slots
           write_entry "${{ github.event.inputs.name1 }}" "${{ github.event.inputs.type1 }}"
           write_entry "${{ github.event.inputs.name2 }}" "${{ github.event.inputs.type2 }}"
           write_entry "${{ github.event.inputs.name3 }}" "${{ github.event.inputs.type3 }}"
@@ -121,10 +120,13 @@ jobs:
           write_entry "${{ github.event.inputs.name9 }}" "${{ github.event.inputs.type9 }}"
           write_entry "${{ github.event.inputs.name10 }}" "${{ github.event.inputs.type10 }}"
 
+          # Export filename for the next step
+          echo "FINAL_FILE=$FULL_FILENAME" >> $GITHUB_ENV
+
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add "${{ github.event.inputs.filename }}"
-          git commit -m "docs: generate ${{ github.event.inputs.filename }} for ${{ github.event.inputs.lab_name }}"
+          git add "$FINAL_FILE"
+          git commit -m "docs: create $FINAL_FILE via workflow"
           git push
