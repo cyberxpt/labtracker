@@ -1,13 +1,25 @@
-name: Create Lab File (10 Slots)
+name: Create Lab Files (5 Files, 10 Slots)
 
 on:
   workflow_dispatch:
     inputs:
-      filename:
-        description: 'Name of the file (extension .txt added automatically)'
+      # File Names
+      filename1:
+        description: 'File 1 Name'
         required: true
-        type: string
-        default: 'lab-results'
+        default: 'lab-results-1'
+      filename2:
+        description: 'File 2 Name (Optional)'
+        default: 'None'
+      filename3:
+        description: 'File 3 Name (Optional)'
+        default: 'None'
+      filename4:
+        description: 'File 4 Name (Optional)'
+        default: 'None'
+      filename5:
+        description: 'File 5 Name (Optional)'
+        default: 'None'
       # Slot 1
       name1:
         description: 'Chapter 1 Name'
@@ -16,62 +28,7 @@ on:
         description: 'Chapter 1 Type'
         options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
         default: None
-      # Slot 2
-      name2:
-        description: 'Chapter 2 Name'
-      type2:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
-      # Slot 3
-      name3:
-        description: 'Chapter 3 Name'
-      type3:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
-      # Slot 4
-      name4:
-        description: 'Chapter 4 Name'
-      type4:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
-      # Slot 5
-      name5:
-        description: 'Chapter 5 Name'
-      type5:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
-      # Slot 6
-      name6:
-        description: 'Chapter 6 Name'
-      type6:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
-      # Slot 7
-      name7:
-        description: 'Chapter 7 Name'
-      type7:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
-      # Slot 8
-      name8:
-        description: 'Chapter 8 Name'
-      type8:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
-      # Slot 9
-      name9:
-        description: 'Chapter 9 Name'
-      type9:
-        type: choice
-        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
-        default: None
+      # ... [Slots 2 through 9 omitted for brevity, keep your existing slot definitions here]
       # Slot 10
       name10:
         description: 'Chapter 10 Name'
@@ -92,41 +49,48 @@ jobs:
 
       - name: Generate File Content
         run: |
-          # Automatically append .txt to the input filename
-          RAW_NAME="${{ github.event.inputs.filename }}"
-          FULL_FILENAME="${RAW_NAME}.txt"
+          # Create an array of the 5 potential filenames
+          FILES=("${{ github.event.inputs.filename1 }}" "${{ github.event.inputs.filename2 }}" "${{ github.event.inputs.filename3 }}" "${{ github.event.inputs.filename4 }}" "${{ github.event.inputs.filename5 }}")
           
-          # Initialize or clear the file
-          > "$FULL_FILENAME"
+          # Function to write entries to a specific file
+          write_entries_to_file() {
+            local TARGET_FILE="$1"
+            
+            # Helper to check and write
+            write_row() {
+              local entry_name="$1"
+              local entry_type="$2"
+              if [ "$entry_type" != "None" ] && [ -n "$entry_name" ]; then
+                echo "$entry_name,$entry_type" >> "$TARGET_FILE"
+              fi
+            }
 
-          # Function to check and write entries
-          write_entry() {
-            local entry_name="$1"
-            local entry_type="$2"
-            if [ "$entry_type" != "None" ] && [ -n "$entry_name" ]; then
-              echo "$entry_name,$entry_type" >> "$FULL_FILENAME"
-            fi
+            write_row "${{ github.event.inputs.name1 }}" "${{ github.event.inputs.type1 }}"
+            write_row "${{ github.event.inputs.name2 }}" "${{ github.event.inputs.type2 }}"
+            write_row "${{ github.event.inputs.name3 }}" "${{ github.event.inputs.type3 }}"
+            write_row "${{ github.event.inputs.name4 }}" "${{ github.event.inputs.type4 }}"
+            write_row "${{ github.event.inputs.name5 }}" "${{ github.event.inputs.type5 }}"
+            write_row "${{ github.event.inputs.name6 }}" "${{ github.event.inputs.type6 }}"
+            write_row "${{ github.event.inputs.name7 }}" "${{ github.event.inputs.type7 }}"
+            write_row "${{ github.event.inputs.name8 }}" "${{ github.event.inputs.type8 }}"
+            write_row "${{ github.event.inputs.name9 }}" "${{ github.event.inputs.type9 }}"
+            write_row "${{ github.event.inputs.name10 }}" "${{ github.event.inputs.type10 }}"
           }
 
-          # Process all 10 slots
-          write_entry "${{ github.event.inputs.name1 }}" "${{ github.event.inputs.type1 }}"
-          write_entry "${{ github.event.inputs.name2 }}" "${{ github.event.inputs.type2 }}"
-          write_entry "${{ github.event.inputs.name3 }}" "${{ github.event.inputs.type3 }}"
-          write_entry "${{ github.event.inputs.name4 }}" "${{ github.event.inputs.type4 }}"
-          write_entry "${{ github.event.inputs.name5 }}" "${{ github.event.inputs.type5 }}"
-          write_entry "${{ github.event.inputs.name6 }}" "${{ github.event.inputs.type6 }}"
-          write_entry "${{ github.event.inputs.name7 }}" "${{ github.event.inputs.type7 }}"
-          write_entry "${{ github.event.inputs.name8 }}" "${{ github.event.inputs.type8 }}"
-          write_entry "${{ github.event.inputs.name9 }}" "${{ github.event.inputs.type9 }}"
-          write_entry "${{ github.event.inputs.name10 }}" "${{ github.event.inputs.type10 }}"
-
-          # Export filename for the next step
-          echo "FINAL_FILE=$FULL_FILENAME" >> $GITHUB_ENV
+          # Loop through the filenames and generate if not "None"
+          for FILE in "${FILES[@]}"; do
+            if [ "$FILE" != "None" ] && [ -n "$FILE" ]; then
+              FULL_FILENAME="${FILE}.txt"
+              > "$FULL_FILENAME"
+              write_entries_to_file "$FULL_FILENAME"
+              echo "Created $FULL_FILENAME"
+            fi
+          done
 
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add "$FINAL_FILE"
-          git commit -m "docs: create $FINAL_FILE via workflow"
+          git add *.txt
+          git commit -m "docs: batch create lab files via workflow" || echo "No changes to commit"
           git push
