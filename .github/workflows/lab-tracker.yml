@@ -1,0 +1,63 @@
+name: Create Lab File
+
+on:
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: 'Name of the file (must end in .txt)'
+        required: true
+        type: string
+      entry_count:
+        description: 'How many entries to create (e.g., 3)'
+        required: true
+        type: number
+      lab_name:
+        description: 'Specify the Lab'
+        required: true
+        type: string
+      entry_type:
+        description: 'Select the Entry Type'
+        required: true
+        type: choice
+        options:
+          - Walkthrough
+          - Exercise
+          - Walkthrough & Exercise
+
+jobs:
+  create-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Filename
+        run: |
+          if [[ ! "${{ github.event.inputs.filename }}" == *.txt ]]; then
+            echo "Error: Filename must end with .txt"
+            exit 1
+          fi
+
+      - name: Generate File Content
+        run: |
+          # Clear the file if it exists or create it
+          FILENAME="${{ github.event.inputs.filename }}"
+          TYPE="${{ github.event.inputs.entry_type }}"
+          COUNT=${{ github.event.inputs.entry_count }}
+          
+          echo "Generating $COUNT entries for $FILENAME..."
+          
+          > "$FILENAME" # Creates/Truncates the file
+          
+          for (( i=0; i<$COUNT; i++ ))
+          do
+            echo "chapter$i,$TYPE" >> "$FILENAME"
+          done
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ github.event.inputs.filename }}"
+          git commit -m "docs: create ${{ github.event.inputs.filename }} for ${{ github.event.inputs.lab_name }}"
+          git push
