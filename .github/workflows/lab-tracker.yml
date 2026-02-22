@@ -1,4 +1,4 @@
-name: Create Lab File
+name: Create Lab File (10 Slots)
 
 on:
   workflow_dispatch:
@@ -6,60 +6,125 @@ on:
       filename:
         description: 'Name of the file (must end in .txt)'
         required: true
-        type: string
-      entry_count:
-        description: 'How many entries to create (e.g., 3)'
-        required: true
-        type: number
+        default: 'lab_report.txt'
       lab_name:
-        description: 'Specify the Lab'
+        description: 'Specify the Lab Name'
         required: true
-        type: string
-      entry_type:
-        description: 'Select the Entry Type'
-        required: true
+
+      # Slot 1
+      name1:
+        description: 'Chapter 1 Name'
+      type1:
         type: choice
-        options:
-          - Walkthrough
-          - Exercise
-          - Walkthrough & Exercise
+        description: 'Chapter 1 Type'
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 2
+      name2:
+        description: 'Chapter 2 Name'
+      type2:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 3
+      name3:
+        description: 'Chapter 3 Name'
+      type3:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 4
+      name4:
+        description: 'Chapter 4 Name'
+      type4:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 5
+      name5:
+        description: 'Chapter 5 Name'
+      type5:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 6
+      name6:
+        description: 'Chapter 6 Name'
+      type6:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 7
+      name7:
+        description: 'Chapter 7 Name'
+      type7:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 8
+      name8:
+        description: 'Chapter 8 Name'
+      type8:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 9
+      name9:
+        description: 'Chapter 9 Name'
+      type9:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+      # Slot 10
+      name10:
+        description: 'Chapter 10 Name'
+      type10:
+        type: choice
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
 
 permissions:
   contents: write
 
 jobs:
-  create-and-commit:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate Filename
-        run: |
-          if [[ ! "${{ github.event.inputs.filename }}" == *.txt ]]; then
-            echo "Error: Filename must end with .txt"
-            exit 1
-          fi
-
-      - name: Generate File Content
+      - name: Process Entries
         run: |
           FILENAME="${{ github.event.inputs.filename }}"
-          TYPE="${{ github.event.inputs.entry_type }}"
-          COUNT=${{ github.event.inputs.entry_count }}
           
-          echo "Generating $COUNT entries for $FILENAME..."
-          
+          # Initialize or clear file
           > "$FILENAME"
-          
-          for (( i=0; i<$COUNT; i++ ))
-          do
-            echo "chapter$i,$TYPE" >> "$FILENAME"
-          done
+
+          # Function to check and write
+          write_entry() {
+            local name="$1"
+            local type="$2"
+            if [ "$type" != "None" ] && [ -n "$name" ]; then
+              echo "$name,$type" >> "$FILENAME"
+            fi
+          }
+
+          # Call function for all 10 slots
+          write_entry "${{ github.event.inputs.name1 }}" "${{ github.event.inputs.type1 }}"
+          write_entry "${{ github.event.inputs.name2 }}" "${{ github.event.inputs.type2 }}"
+          write_entry "${{ github.event.inputs.name3 }}" "${{ github.event.inputs.type3 }}"
+          write_entry "${{ github.event.inputs.name4 }}" "${{ github.event.inputs.type4 }}"
+          write_entry "${{ github.event.inputs.name5 }}" "${{ github.event.inputs.type5 }}"
+          write_entry "${{ github.event.inputs.name6 }}" "${{ github.event.inputs.type6 }}"
+          write_entry "${{ github.event.inputs.name7 }}" "${{ github.event.inputs.type7 }}"
+          write_entry "${{ github.event.inputs.name8 }}" "${{ github.event.inputs.type8 }}"
+          write_entry "${{ github.event.inputs.name9 }}" "${{ github.event.inputs.type9 }}"
+          write_entry "${{ github.event.inputs.name10 }}" "${{ github.event.inputs.type10 }}"
 
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add "${{ github.event.inputs.filename }}"
-          git commit -m "docs: create ${{ github.event.inputs.filename }} for ${{ github.event.inputs.lab_name }}"
+          git commit -m "docs: generate ${{ github.event.inputs.filename }} for ${{ github.event.inputs.lab_name }}"
           git push
