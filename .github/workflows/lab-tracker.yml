@@ -24,6 +24,9 @@ on:
           - Exercise
           - Walkthrough & Exercise
 
+permissions:
+  contents: write
+
 jobs:
   create-and-commit:
     runs-on: ubuntu-latest
@@ -40,14 +43,13 @@ jobs:
 
       - name: Generate File Content
         run: |
-          # Clear the file if it exists or create it
           FILENAME="${{ github.event.inputs.filename }}"
           TYPE="${{ github.event.inputs.entry_type }}"
           COUNT=${{ github.event.inputs.entry_count }}
           
           echo "Generating $COUNT entries for $FILENAME..."
           
-          > "$FILENAME" # Creates/Truncates the file
+          > "$FILENAME"
           
           for (( i=0; i<$COUNT; i++ ))
           do
