@@ -1,1 +1,2 @@
 linux-privilege-escalation-1,Walkthrough & Exercise
+linux-privilege-escalation-2,Walkthrough & Exercise
