@@ -1,1 +1,2 @@
-chapter7
+1
+chapter7,Password Brute Forcing - Remote Desktop Protocol Walkthrough & Exercise
