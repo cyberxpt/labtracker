@@ -1,1 +1,2 @@
-chapter10,Walkthrough & Exercise
+1
+chapter10,Introduction to Authorization Headers and Exploitation- Walkthrough & Exercise
