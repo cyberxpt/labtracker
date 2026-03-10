@@ -1,1 +1,2 @@
-linux-privilege-escalation-1,Walkthrough & Exercise
+1
+linux-privilege-escalation-1,Linux Privilege Escalation - sudo misconfiguration Walkthrough & Exercise
