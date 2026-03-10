@@ -1,1 +1,2 @@
-linux-privilege-escalation-2,Walkthrough
+1
+linux-privilege-escalation-2,Linux Privilege Escalation - Crontab misconfiguration Walkthrough & Exercise
