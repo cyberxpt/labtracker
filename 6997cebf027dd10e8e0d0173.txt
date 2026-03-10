@@ -1,1 +1,2 @@
-subdomain-takeover
+1
+subdomain-takeover,Subdomain Takeover - Walkthrough & Exercise
