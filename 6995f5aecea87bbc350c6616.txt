@@ -1,2 +1,2 @@
 1
-chapter2,Vulnerability Scanning - Walkthrough & Exercise
+chapter2,Nmap Vulnerability Scanning - Walkthrough & Exercise
