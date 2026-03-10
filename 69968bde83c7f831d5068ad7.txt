@@ -1,1 +1,2 @@
-cics-pentest,Walkthrough & Exercise
+1
+cics-pentest,CICS Transaction Penetration Testing - Walkthrough & Exercise
