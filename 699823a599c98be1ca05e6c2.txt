@@ -1,1 +1,2 @@
-linux-privilege-escalation-4,Walkthrough & Exercise
+1
+linux-privilege-escalation-4,Linux Privilege Escalation - Kernel Exploit Walkthrough & Exercise
