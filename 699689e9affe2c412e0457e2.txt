@@ -1,2 +1,2 @@
 1
-Active Directory,Active Directory Attack - Walkthrough & Exercise
+Active Directory,Active Directory Lateral Movement - Walkthrough & Exercise
