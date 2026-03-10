@@ -1,1 +1,2 @@
-chapter8,Walkthrough
+1
+chapter8,Window Privilege Escalation - Privilege Escalation via SeImpersonatePrivilege Walkthrough
