@@ -1,1 +1,2 @@
-chapter8,Walkthrough & Exercise
+1
+chapter8,Window Privilege Escalation - Unquoted Service Paths Walkthrough & Exercise
