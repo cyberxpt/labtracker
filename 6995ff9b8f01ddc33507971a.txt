@@ -1,2 +1,2 @@
 1
-chapter3,Vulnerability Scanning - Nessus Walkthrough & Exercise
+chapter3,Vulnerability Scanning - Nessus Walkthrough
