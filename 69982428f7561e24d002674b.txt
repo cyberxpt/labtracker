@@ -1,1 +1,2 @@
-chapter8,Walkthrough
+1
+chapter8,Window Privilege Escalation - Weak Service Binary Permissions Walkthrough & Exercise
