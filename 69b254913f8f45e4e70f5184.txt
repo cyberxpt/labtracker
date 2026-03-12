@@ -1,1 +1,2 @@
-1,Walkthrough
+1
+chapter0_5_1,Introduction to Shell - Restricted Shell Walkthrough & Exercise
