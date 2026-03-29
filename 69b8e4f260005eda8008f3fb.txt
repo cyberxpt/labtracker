@@ -1,1 +1,2 @@
-sql_intro,Walkthrough & Exercise
+1
+sql_intro,Introduction to SQL Injection - Walkthrough & Exercise
