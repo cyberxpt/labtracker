@@ -1,2 +1,3 @@
 sql_intro,Walkthrough
 sqlmap_exercise1,Exercise
+sqlmap_exercise2,Exercise
