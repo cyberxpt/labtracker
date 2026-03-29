@@ -1,3 +1,4 @@
-sql_intro,Walkthrough
-sqlmap_exercise1,Exercise
-sqlmap_exercise2,Exercise
+1
+sql_intro,Introduction to SQL Injection - Walkthrough
+sqlmap_exercise1,Exploiting SQL Injection via SQLMap Exercise - 1 
+sqlmap_exercise2,Exploiting SQL Injection via SQLMap - 2
