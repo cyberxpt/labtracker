@@ -1,0 +1,2 @@
+sql_intro,Walkthrough
+sqlmap_exercise1,Exercise
