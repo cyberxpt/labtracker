@@ -1,2 +1,2 @@
 1
-ssti-intro,Introduction to SSTI - Walkthrough & Exercise
+intro-ssti,Introduction to SSTI - Walkthrough & Exercise
