@@ -1,4 +1,4 @@
-name: Create Lab Files (5 Files, 10 Slots)
+name: Create Lab Files (5 Files, 4 Chapters)
 
 on:
   workflow_dispatch:
@@ -20,20 +20,54 @@ on:
       filename5:
         description: 'File 5 Name (Optional)'
         default: 'None'
-      # Slot 1
-      name1:
-        description: 'Chapter 1 Name'
-      type1:
+
+      # Deploy Kali
+      deploy_kali:
+        type: boolean
+        description: 'Deploy Kali'
+        default: false
+
+      # Chapter 1
+      deployment_file1:
+        description: 'Chapter 1 Deployment File'
+      exercise_name1:
+        description: 'Chapter 1 Exercise Name'
+      exercise_type1:
         type: choice
-        description: 'Chapter 1 Type'
+        description: 'Exercise 1 Type'
         options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
         default: None
-      # ... [Slots 2 through 9 omitted for brevity, keep your existing slot definitions here]
-      # Slot 10
-      name10:
-        description: 'Chapter 10 Name'
-      type10:
+
+      # Chapter 2
+      deployment_file2:
+        description: 'Chapter 2 Deployment File'
+      exercise_name2:
+        description: 'Chapter 2 Exercise Name'
+      exercise_type2:
         type: choice
+        description: 'Exercise 2 Type'
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+
+      # Chapter 3
+      deployment_file3:
+        description: 'Chapter 3 Deployment File'
+      exercise_name3:
+        description: 'Chapter 3 Exercise Name'
+      exercise_type3:
+        type: choice
+        description: 'Exercise 3 Type'
+        options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
+        default: None
+
+      # Chapter 4
+      deployment_file4:
+        description: 'Chapter 4 Deployment File'
+      exercise_name4:
+        description: 'Chapter 4 Exercise Name'
+      exercise_type4:
+        type: choice
+        description: 'Exercise 4 Type'
         options: [None, Walkthrough, Exercise, Walkthrough & Exercise]
         default: None
 
@@ -51,39 +85,44 @@ jobs:
         run: |
           # Create an array of the 5 potential filenames
           FILES=("${{ github.event.inputs.filename1 }}" "${{ github.event.inputs.filename2 }}" "${{ github.event.inputs.filename3 }}" "${{ github.event.inputs.filename4 }}" "${{ github.event.inputs.filename5 }}")
-          
+
+          # Convert deploy_kali boolean to 1/0
+          if [ "${{ github.event.inputs.deploy_kali }}" = "true" ]; then
+            KALI_FLAG="1"
+          else
+            KALI_FLAG="0"
+          fi
+
           # Function to write entries to a specific file
           write_entries_to_file() {
             local TARGET_FILE="$1"
-            
-            # Helper to check and write
+
+            # First line: Kali deploy flag
+            echo "$KALI_FLAG" > "$TARGET_FILE"
+
+            # Helper to check and write a chapter row
             write_row() {
-              local entry_name="$1"
-              local entry_type="$2"
-              if [ "$entry_type" != "None" ] && [ -n "$entry_name" ]; then
-                echo "$entry_name,$entry_type" >> "$TARGET_FILE"
+              local deployment_file="$1"
+              local exercise_name="$2"
+              local exercise_type="$3"
+              if [ "$exercise_type" != "None" ] && [ -n "$deployment_file" ] && [ -n "$exercise_name" ]; then
+                echo "${deployment_file},${exercise_name} - ${exercise_type}" >> "$TARGET_FILE"
               fi
             }
 
-            write_row "${{ github.event.inputs.name1 }}" "${{ github.event.inputs.type1 }}"
-            write_row "${{ github.event.inputs.name2 }}" "${{ github.event.inputs.type2 }}"
-            write_row "${{ github.event.inputs.name3 }}" "${{ github.event.inputs.type3 }}"
-            write_row "${{ github.event.inputs.name4 }}" "${{ github.event.inputs.type4 }}"
-            write_row "${{ github.event.inputs.name5 }}" "${{ github.event.inputs.type5 }}"
-            write_row "${{ github.event.inputs.name6 }}" "${{ github.event.inputs.type6 }}"
-            write_row "${{ github.event.inputs.name7 }}" "${{ github.event.inputs.type7 }}"
-            write_row "${{ github.event.inputs.name8 }}" "${{ github.event.inputs.type8 }}"
-            write_row "${{ github.event.inputs.name9 }}" "${{ github.event.inputs.type9 }}"
-            write_row "${{ github.event.inputs.name10 }}" "${{ github.event.inputs.type10 }}"
+            write_row "${{ github.event.inputs.deployment_file1 }}" "${{ github.event.inputs.exercise_name1 }}" "${{ github.event.inputs.exercise_type1 }}"
+            write_row "${{ github.event.inputs.deployment_file2 }}" "${{ github.event.inputs.exercise_name2 }}" "${{ github.event.inputs.exercise_type2 }}"
+            write_row "${{ github.event.inputs.deployment_file3 }}" "${{ github.event.inputs.exercise_name3 }}" "${{ github.event.inputs.exercise_type3 }}"
+            write_row "${{ github.event.inputs.deployment_file4 }}" "${{ github.event.inputs.exercise_name4 }}" "${{ github.event.inputs.exercise_type4 }}"
           }
 
           # Loop through the filenames and generate if not "None"
           for FILE in "${FILES[@]}"; do
             if [ "$FILE" != "None" ] && [ -n "$FILE" ]; then
               FULL_FILENAME="${FILE}.txt"
-              > "$FULL_FILENAME"
               write_entries_to_file "$FULL_FILENAME"
               echo "Created $FULL_FILENAME"
+              cat "$FULL_FILENAME"
             fi
           done
 
