@@ -1,4 +1,4 @@
 0
-sts-lab1,STS Lab 1
-sts-lab2,STS Lab 2
-sts-lab3,STS Lab 3
+sts-lab1,AWS STS Lab 1
+sts-lab2,AWS STS Lab 2
+sts-lab3,AWS STS Lab 3
