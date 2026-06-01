@@ -1,4 +1,4 @@
 0
-sts-lab1
-sts-lab2
-sts-lab3
+sts-lab1,STS Lab 1
+sts-lab2,STS Lab 2
+sts-lab3,STS Lab 3
